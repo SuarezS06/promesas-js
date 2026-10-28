@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 04</title>
+</head>
+<body>
+
+    <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  }
+
+  form {
+    width: 380px;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  form > div:first-child {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  form > div {
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #2c5364;
+  }
+
+  button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #2c5364;
+    color: #ffffff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #203a43;
+  }
+</style>
+
+    <form action="" id="formBuscador">
+      <div>
+        <input type="text" id="idpersonaje" placeholder="......ID......" />
+        <button type="submit">Buscar</button>
+      </div>
+
+      <div>
+        <label for="edad">Edad</label>
+        <input type="number" id="edad" />
+      </div>
+
+      <div>
+        <label for="genero">Genero</label>
+        <input type="text" id="genero" />
+      </div>
+
+      <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" />
+      </div>
+
+      <div>
+        <label for="ocupacion">Ocupacinn</label>
+        <input type="text" id="ocupacion">
+      </div>
+
+    </form>
+
+    <script>
+      const formulario = document.getElementById("formBuscador");
+      const id = document.getElementById("idpersonaje");
+      const edad = document.getElementById("edad");
+      const genero = document.getElementById("genero");
+      const nombre = document.getElementById("nombre");
+      const ocupacion = document.getElementById("ocupacion");
+
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        obtenerPersonaje(id.value);
+      });
+
+      async function obtenerPersonaje(id) {
+        const API_URL = `https://thesimpsonsapi.com/api/characters/${id}`;
+
+        try {
+          const respuesta = await fetch(API_URL);
+
+          if (!respuesta.ok) {
+            if (respuesta.status == 404){
+              edad.value = ''
+              genero.value = ''
+              nombre.value = ''
+              ocupacion.value = ''
+              alert('No existe este personaje')  
+            }
+            throw new Error(`Error de comunicación`);
+          }
+
+          const datos = await respuesta.json();
+          console.log(datos);   
+
+          edad.value = datos.age;             
+          genero.value = datos.gender;        
+          nombre.value = datos.name;          
+          ocupacion.value = datos.occupation;   
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    </script>
+
+</body>
+</html>

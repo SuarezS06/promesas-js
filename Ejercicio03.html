@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio 03</title>
+  </head>
+  <body>
+
+    <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  }
+
+  form {
+    width: 380px;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  form > div:first-child {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  form > div {
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    transition: border-color 0.2s;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #2c5364;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #2c5364;
+    color: #ffffff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #203a43;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 300px;
+    margin: 0 auto;
+    border-radius: 8px;
+  }
+</style>
+
+    <form action="" id="formBuscador">
+      <div>
+        <input type="text" id="idpersonaje" placeholder="......ID......" />
+        <button type="submit">Buscar</button>
+      </div>
+
+      <div>
+        <label for="nombre">Nombre personaje</label>
+        <input type="text" id="nombre" />
+      </div>
+
+      <div>
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="8"></textarea>
+      </div>
+
+      <div>
+        <label for="foto">Foto</label>
+        <img src="" alt="Foto personaje" id="foto" referrerpolicy="no-referrer">
+      </div>
+    </form>
+
+    <script>
+      const formulario = document.getElementById("formBuscador");
+      const id = document.getElementById("idpersonaje");
+      const nombre = document.getElementById("nombre");
+      const descripcion = document.getElementById("descripcion");
+      const foto = document.getElementById("foto");
+
+      formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        obtenerPersonaje(id.value);
+      });
+
+      async function obtenerPersonaje(id) {
+        const API_URL = `https://dragonball-api.com/api/characters/${id}`;
+
+        try {
+          const respuesta = await fetch(API_URL);
+
+          if (!respuesta.ok) {
+
+            if (respuesta.status == 404){
+              nombre.value = ''
+              descripcion.value = ''
+              foto.src = '' 
+              alert('No existe este personaje')
+            }
+            throw new Error(`Error de comunicación`);
+          }
+
+          const datos = await respuesta.json();
+          console.log(datos.image);
+
+          nombre.value = datos.name;
+          descripcion.value = datos.description;
+          foto.src = datos.image;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    </script>
+  </body>
+</html>
